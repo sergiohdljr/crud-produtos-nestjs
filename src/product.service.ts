@@ -10,7 +10,7 @@ export class ProductService {
     const {
       sku,
       name,
-      inventory: { quantity, warehouses },
+      inventory: { id, quantity, warehouses },
       isMarkatable,
     } = data;
 
@@ -19,16 +19,28 @@ export class ProductService {
         sku,
         name,
         inventory: {
-          connectOrCreate: {
-            where: {
-              productSku: sku,
-            },
-            create: {
-              quantity,
+          create: {
+            id,
+            quantity,
+            warehouses: {
+              create: warehouses.map((warehouse) => {
+                return {
+                  locality: warehouse.locality,
+                  quantity: warehouse.quantity,
+                  type: warehouse.type,
+                };
+              }),
             },
           },
         },
         isMarkatable,
+      },
+      include: {
+        inventory: {
+          include: {
+            warehouses: true,
+          },
+        },
       },
     });
   }

@@ -18,7 +18,7 @@ model Product {
 }
 
 model Inventory {
-  id         Int          @id @default(autoincrement())
+  id         Int          @id
   quantity   Int
   warehouses Warehouses[]
   Product    Product      @relation(fields: [productSku], references: [sku])
@@ -31,5 +31,5 @@ model Warehouses {
   quantity    Int
   type        String
   Inventory   Inventory @relation(fields: [inventoryId], references: [id])
-  inventoryId Int       @unique
+  inventoryId Int
 }
