@@ -33,12 +33,22 @@ export class ProductService {
       where: {
         sku,
       },
-      include: {
+      select: {
+        sku: true,
+        name: true,
         inventory: {
-          include: {
-            warehouses: true,
+          select: {
+            quantity: true,
+            warehouses: {
+              select: {
+                locality: true,
+                quantity: true,
+                type: true,
+              },
+            },
           },
         },
+        isMarkatable: true,
       },
     });
 
