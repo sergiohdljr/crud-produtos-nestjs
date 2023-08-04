@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { ProductRequest } from '../dto/product.resquestDTO';
-import { Product } from '@prisma/client';
 
 @Injectable()
 export class ProductService {
@@ -9,12 +8,22 @@ export class ProductService {
 
   async findAll() {
     return this.prisma.product.findMany({
-      include: {
+      select: {
+        sku: true,
+        name: true,
         inventory: {
-          include: {
-            warehouses: true,
+          select: {
+            quantity: true,
+            warehouses: {
+              select: {
+                locality: true,
+                quantity: true,
+                type: true,
+              },
+            },
           },
         },
+        isMarkatable: true,
       },
     });
   }
