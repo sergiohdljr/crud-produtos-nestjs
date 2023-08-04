@@ -1,10 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { ProductRequest } from './dto/resquestDTO';
+import { Product } from '@prisma/client';
 
 @Injectable()
 export class ProductService {
   constructor(private prisma: PrismaService) {}
+
+  async findAll() {
+    return this.prisma.product.findMany({
+      include: {
+        inventory: {
+          include: {
+            warehouses: true,
+          },
+        },
+      },
+    });
+  }
 
   async createUser(data: ProductRequest) {
     const {

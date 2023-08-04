@@ -12,8 +12,8 @@ export class AppController {
   ) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  async findAllProducts(): Promise<Product[]> {
+    return this.productService.findAll();
   }
 
   @Post('/create')
