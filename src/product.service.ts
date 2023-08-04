@@ -10,9 +10,14 @@ export class ProductService {
     const {
       sku,
       name,
-      inventory: { id, quantity, warehouses },
-      isMarkatable,
+      inventory: { id, warehouses },
     } = data;
+
+    const inventoryQuantity = warehouses
+      .map((warehouse) => warehouse.quantity)
+      .reduce((total, num) => total + num);
+
+    const isMarkatableValue = inventoryQuantity > 0 ? true : false;
 
     return this.prisma.product.create({
       data: {
@@ -21,7 +26,7 @@ export class ProductService {
         inventory: {
           create: {
             id,
-            quantity,
+            quantity: inventoryQuantity,
             warehouses: {
               create: warehouses.map((warehouse) => {
                 return {
@@ -33,7 +38,7 @@ export class ProductService {
             },
           },
         },
-        isMarkatable,
+        isMarkatable: isMarkatableValue,
       },
       include: {
         inventory: {

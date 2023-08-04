@@ -17,10 +17,7 @@ export class AppController {
   }
 
   @Post('/create')
-  async saveProduct(
-    @Body()
-    postProduct: ProductRequest,
-  ): Promise<Product> {
+  async saveProduct(@Body() postProduct: ProductRequest): Promise<Product> {
     return this.productService.createUser(postProduct);
   }
 }
