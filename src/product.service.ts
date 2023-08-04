@@ -19,6 +19,23 @@ export class ProductService {
     });
   }
 
+  async findBySku(sku: string) {
+    const searchBySku = this.prisma.product.findUnique({
+      where: {
+        sku,
+      },
+      include: {
+        inventory: {
+          include: {
+            warehouses: true,
+          },
+        },
+      },
+    });
+
+    return searchBySku;
+  }
+
   async createUser(data: ProductRequest) {
     const {
       sku,
