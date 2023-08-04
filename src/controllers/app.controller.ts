@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ProductService } from '../service/product.service';
 import { Product } from '@prisma/client';
-import { ProductRequest } from '../dto/resquestDTO';
+import { ProductRequest } from '../dto/product.resquestDTO';
 
 @Controller('api/product')
 export class AppController {
