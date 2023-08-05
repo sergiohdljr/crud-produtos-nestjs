@@ -1,9 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
-  HttpStatus,
   Param,
   Post,
 } from '@nestjs/common';
@@ -30,5 +30,10 @@ export class AppController {
   @Post('/create')
   async saveProduct(@Body() postProduct: ProductRequest): Promise<Product> {
     return this.productService.createUser(postProduct);
+  }
+
+  @Delete('/:sku')
+  async deleteProductBySku(@Param('sku') sku: string) {
+    this.productService.deleteBySku(sku);
   }
 }

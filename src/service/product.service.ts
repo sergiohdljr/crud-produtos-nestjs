@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { ProductRequest } from '../dto/product.resquestDTO';
 
@@ -104,5 +109,27 @@ export class ProductService {
         },
       },
     });
+  }
+
+  async deleteBySku(sku: string) {
+    const deleteBySku = await this.prisma.product.delete({
+      where: {
+        sku,
+      },
+      include: {
+        inventory: {
+          include: {
+            warehouses: true,
+          },
+        },
+      },
+    });
+
+    if (!deleteBySku) {
+      throw new HttpException(
+        `Produto com o sku igual a ${sku} não foi encontrado`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 }
