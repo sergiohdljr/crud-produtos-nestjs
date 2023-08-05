@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { ProductRequest } from '../dto/product.resquestDTO';
 
@@ -29,7 +29,7 @@ export class ProductService {
   }
 
   async findBySku(sku: string) {
-    const searchBySku = this.prisma.product.findUnique({
+    const ProductSearchBySku = await this.prisma.product.findUnique({
       where: {
         sku,
       },
@@ -52,7 +52,14 @@ export class ProductService {
       },
     });
 
-    return searchBySku;
+    if (!ProductSearchBySku) {
+      throw new HttpException(
+        `Produto com o sku igual a ${sku} não foi encontrado`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return ProductSearchBySku;
   }
 
   async createUser(data: ProductRequest) {

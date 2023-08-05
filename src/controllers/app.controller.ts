@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { ProductService } from '../service/product.service';
 import { Product } from '@prisma/client';
 import { ProductRequest } from '../dto/product.resquestDTO';
@@ -13,7 +21,9 @@ export class AppController {
   }
 
   @Get('/:sku')
-  async findProductBySku(@Param('sku') sku: string): Promise<Product> {
+  async findProductBySku(
+    @Param('sku') sku: string,
+  ): Promise<Product | HttpException> {
     return this.productService.findBySku(sku);
   }
 
