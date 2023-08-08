@@ -80,7 +80,20 @@ export class ProductService {
 
     const isMarkatableValue = inventoryQuantity > 0 ? true : false;
 
-    return this.prisma.product.create({
+    const productAlreadyExists = await this.prisma.product.findUnique({
+      where: {
+        sku,
+      },
+    });
+
+    if (productAlreadyExists) {
+      throw new HttpException(
+        `Produto com o sku igual a ${sku} já existe`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    return await this.prisma.product.create({
       data: {
         sku,
         name,
