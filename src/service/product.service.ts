@@ -1,9 +1,4 @@
-import {
-  HttpCode,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { ProductRequest } from '../dto/product.resquestDTO';
 

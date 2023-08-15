@@ -72,9 +72,10 @@ $ npm install
 # criar migração banco de dados SQLite
 $ npx prisma migrate dev
 
-# rodar servidor na porta 3000
+# rodar servidor na porta: 3000
 $ npm run start:dev
 
+# documentação swagger: http://localhost:3000/api/
 ```
 
 ## Stack Utilizada
