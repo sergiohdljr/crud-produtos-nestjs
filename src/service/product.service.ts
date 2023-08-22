@@ -1,9 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { ProductRequest } from '../dto/product.resquestDTO';
-import { Product } from '@prisma/client';
 import { updateProductType } from 'src/dto/update/updateProductDTO';
-import { async } from 'rxjs';
 
 @Injectable()
 export class ProductService {
@@ -176,7 +174,7 @@ export class ProductService {
       },
     });
 
-    const upadateProduct = await this.prisma.product.update({
+    const upadateNameProduct = await this.prisma.product.update({
       where: {
         sku: productSku,
       },
@@ -207,6 +205,51 @@ export class ProductService {
       });
     });
 
-    return wup;
+    const updatedProduct = await this.prisma.product.findUnique({
+      where: {
+        sku: productSku,
+      },
+      include: {
+        inventory: {
+          include: {
+            warehouses: true,
+          },
+        },
+      },
+    });
+
+    const newQuantityValue = updatedProduct.inventory.warehouses
+      .map((warehouse) => warehouse.quantity)
+      .reduce((total, num) => total + num);
+
+    const isMarkatableValue = newQuantityValue > 0 ? true : false;
+
+    const NewProduct = this.prisma.product.update({
+      where: {
+        sku: productSku,
+      },
+      data: {
+        isMarkatable: isMarkatableValue,
+        inventory: {
+          update: {
+            where: {
+              productSku: productSku,
+            },
+            data: {
+              quantity: newQuantityValue,
+            },
+          },
+        },
+      },
+      include: {
+        inventory: {
+          include: {
+            warehouses: true,
+          },
+        },
+      },
+    });
+
+    return NewProduct;
   }
 }
