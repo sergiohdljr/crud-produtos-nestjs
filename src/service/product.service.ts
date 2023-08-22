@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { ProductRequest } from '../dto/product.resquestDTO';
 import { updateProductType } from 'src/dto/update/updateProductDTO';
+import { serializationsUpdateProduct } from 'src/utils/serializationUpdateProduct';
 
 @Injectable()
 export class ProductService {
@@ -224,7 +225,7 @@ export class ProductService {
 
     const isMarkatableValue = newQuantityValue > 0 ? true : false;
 
-    const NewProduct = this.prisma.product.update({
+    const NewProduct = await this.prisma.product.update({
       where: {
         sku: productSku,
       },
@@ -250,6 +251,6 @@ export class ProductService {
       },
     });
 
-    return NewProduct;
+    return serializationsUpdateProduct(NewProduct);
   }
 }
