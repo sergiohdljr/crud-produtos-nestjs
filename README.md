@@ -34,7 +34,7 @@ Crie endpoints para as seguintes ações:
 
 - [x] Criação de produto onde o payload será o json informado acima (exceto as propriedades **isMarketable** e **inventory.quantity**)
 
-- [ ] Edição de produto por **sku**
+- [x] Edição de produto por **sku**
 
 - [x] Recuperação de produto por **sku**
 
