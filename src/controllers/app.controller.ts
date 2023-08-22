@@ -6,10 +6,12 @@ import {
   HttpException,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
 import { ProductService } from '../service/product.service';
 import { Product } from '@prisma/client';
 import { ProductRequest } from '../dto/product.resquestDTO';
+import { updateProductType } from 'src/dto/update/updateProductDTO';
 
 @Controller('api/product')
 export class AppController {
@@ -35,5 +37,13 @@ export class AppController {
   @Delete('/:sku')
   async deleteProductBySku(@Param('sku') sku: string) {
     this.productService.deleteBySku(sku);
+  }
+
+  @Put('/:sku')
+  async editProductBySku(
+    @Body() product: updateProductType,
+    @Param('sku') sku: string,
+  ) {
+    return this.productService.editProductBySku(sku, product);
   }
 }

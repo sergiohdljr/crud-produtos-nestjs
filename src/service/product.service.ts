@@ -1,6 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { ProductRequest } from '../dto/product.resquestDTO';
+import { Product } from '@prisma/client';
+import { updateProductType } from 'src/dto/update/updateProductDTO';
+import { async } from 'rxjs';
 
 @Injectable()
 export class ProductService {
@@ -139,5 +142,71 @@ export class ProductService {
         HttpStatus.NOT_FOUND,
       );
     }
+  }
+
+  async editProductBySku(sku: string, data: updateProductType) {
+    const productSku = sku;
+    const { name, inventory } = data;
+
+    const Warehouses = inventory.warehouses.map((warehouse) => warehouse);
+
+    const productExist = await this.prisma.product.findUnique({
+      where: {
+        sku: productSku,
+      },
+      include: {
+        inventory: {
+          include: {
+            warehouses: true,
+          },
+        },
+      },
+    });
+
+    if (!productExist) {
+      throw new HttpException(
+        `Produto com o sku igual a ${sku} não foi encontrado`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const warehousesToUpdate = await this.prisma.warehouses.findMany({
+      where: {
+        inventoryId: productExist.inventory.id,
+      },
+    });
+
+    const upadateProduct = await this.prisma.product.update({
+      where: {
+        sku: productSku,
+      },
+      data: {
+        name,
+      },
+      include: {
+        inventory: {
+          include: {
+            warehouses: true,
+          },
+        },
+      },
+    });
+
+    const wup = warehousesToUpdate.map(async (update) => {
+      return Warehouses.map(async (warehouse) => {
+        return await this.prisma.warehouses.updateMany({
+          where: {
+            id: update.id,
+          },
+          data: {
+            quantity: warehouse.quantity,
+            locality: warehouse.locality,
+            type: warehouse.type,
+          },
+        });
+      });
+    });
+
+    return wup;
   }
 }
