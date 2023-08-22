@@ -56,7 +56,7 @@ Crie endpoints para as seguintes ações:
         Dois produtos são considerados iguais se os seus skus forem iguais
 
 
-- [ ] Ao atualizar um produto, o antigo deve ser sobrescrito com o que esta sendo enviado na requisição
+- [x] Ao atualizar um produto, o antigo deve ser sobrescrito com o que esta sendo enviado na requisição
 
         A requisição deve receber o sku e atualizar com o produto que tbm esta vindo na requisição
 
@@ -69,7 +69,7 @@ $ npm install
 ## Running the app
 
 ```bash
-# criar migração banco de dados SQLite
+# criar banco de dados e migrações no SQLite
 $ npx prisma migrate dev
 
 # rodar servidor na porta: 3000
