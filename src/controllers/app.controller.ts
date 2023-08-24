@@ -12,7 +12,6 @@ import { ProductService } from '../service/product.service';
 import { Product } from '@prisma/client';
 import { ProductRequest } from '../dto/product.resquestDTO';
 import { updateProductType } from 'src/dto/update/updateProductDTO';
-import { updatedProductType } from 'src/utils/serializationUpdateProduct';
 
 @Controller('api/product')
 export class AppController {

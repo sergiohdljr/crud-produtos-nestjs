@@ -1,5 +1,3 @@
-import { Warehouses } from '@prisma/client';
-
 export interface updatedProductType {
   sku: string;
   name: string;
