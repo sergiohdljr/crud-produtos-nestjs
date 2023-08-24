@@ -12,6 +12,7 @@ import { ProductService } from '../service/product.service';
 import { Product } from '@prisma/client';
 import { ProductRequest } from '../dto/product.resquestDTO';
 import { updateProductType } from 'src/dto/update/updateProductDTO';
+import { updatedProductType } from 'src/utils/serializationUpdateProduct';
 
 @Controller('api/product')
 export class AppController {
@@ -30,7 +31,9 @@ export class AppController {
   }
 
   @Post('/create')
-  async saveProduct(@Body() postProduct: ProductRequest): Promise<Product> {
+  async saveProduct(
+    @Body() postProduct: ProductRequest,
+  ): Promise<Product | HttpException> {
     return this.productService.createUser(postProduct);
   }
 
@@ -43,7 +46,7 @@ export class AppController {
   async editProductBySku(
     @Body() product: updateProductType,
     @Param('sku') sku: string,
-  ) {
+  ): Promise<Product | HttpException> {
     return this.productService.editProductBySku(sku, product);
   }
 }
