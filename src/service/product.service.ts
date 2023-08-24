@@ -9,25 +9,29 @@ export class ProductService {
   constructor(private prisma: PrismaService) {}
 
   async findAll() {
-    return this.prisma.product.findMany({
-      select: {
-        sku: true,
-        name: true,
-        inventory: {
-          select: {
-            quantity: true,
-            warehouses: {
-              select: {
-                locality: true,
-                quantity: true,
-                type: true,
-              },
+    const selectFields = {
+      sku: true,
+      name: true,
+      inventory: {
+        select: {
+          quantity: true,
+          warehouses: {
+            select: {
+              locality: true,
+              quantity: true,
+              type: true,
             },
           },
         },
-        isMarkatable: true,
       },
+      isMarkatable: true,
+    };
+
+    const products = this.prisma.product.findMany({
+      select: selectFields,
     });
+
+    return products;
   }
 
   async findBySku(sku: string) {
